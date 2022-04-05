@@ -2,9 +2,6 @@ import pygame, sys
 from button import Button
 
 
-
-
-
 pygame.init()
 
 SCREEN = pygame.display.set_mode((1280, 720))
@@ -12,8 +9,10 @@ pygame.display.set_caption("CASINO")
 BLACKJACK = pygame.image.load("pics/blackjack.png")
 BG = pygame.image.load("pics/Background.png")
 
+
 def get_font(size):
     return pygame.font.Font("pics/font.ttf", size)
+
 
 def play():
     while True:
@@ -22,10 +21,10 @@ def play():
 
         PLAY_MOUSE_POS = pygame.mouse.get_pos()
 
-
-
         PLAY_TEXT = get_font(100).render("Choose your game:", True, "#b68f40")
+
         PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
+
         SCREEN.blit(PLAY_TEXT, PLAY_RECT)
 
         PLAY_BACK = Button(image=None, pos=(640, 650),
@@ -43,8 +42,6 @@ def play():
         LUCKYSEVEN_BUTTON.changeColor(PLAY_MOUSE_POS)
         LUCKYSEVEN_BUTTON.update(SCREEN)
 
-
-
         PLAY_BACK.changeColor(PLAY_MOUSE_POS)
         PLAY_BACK.update(SCREEN)
 
@@ -57,8 +54,8 @@ def play():
                     main_menu()
                 if BLACKJACK_BUTTON.checkForInput(PLAY_MOUSE_POS):
                     import blackjack
-
-
+                if LUCKYSEVEN_BUTTON.checkForInput(PLAY_MOUSE_POS):
+                    import luckyseven
 
         pygame.display.update()
 
@@ -89,6 +86,7 @@ def options():
 
 
         pygame.display.update()
+
 
 def main_menu():
     while True:
@@ -130,4 +128,5 @@ def main_menu():
 
         pygame.display.update()
 
+pygame.display.update()
 main_menu()

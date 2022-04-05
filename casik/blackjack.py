@@ -2,10 +2,12 @@ import pygame
 from enum import Enum, IntEnum
 import random
 from pics import *
+from button import Button
 
 
 
-
+def get_font(size):
+    return pygame.font.Font("pics/font.ttf", size)
 
 # Создание карт
 
@@ -75,7 +77,7 @@ def get_random_card():
     r = random.randint(0,len(full_deck)-1)
 
 
-    # Убрать и вернуть карту из колоды
+# Убрать и вернуть карту из колоды
     return full_deck.pop(r)
 
 
@@ -171,10 +173,10 @@ def draw_texts():
     enter_text = INST_font.render('Нажмите [ENTER] чтобы пасануть', True, white)
     spec_text = INST_font.render('Нажмите [TAB] чтобы видеть очки', True, white)
 
-    win.blit(r_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2+250))
-    win.blit(space_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2+280))
-    win.blit(enter_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2+310))
-    win.blit(spec_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2+340))
+    win.blit(r_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2 - 330))
+    win.blit(space_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2 - 300))
+    win.blit(enter_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2 - 270))
+    win.blit(spec_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2 - 240))
 
 
 
@@ -271,15 +273,28 @@ BG = pygame.image.load("pics/Background.png")
 
 # игровой цикл
 while run_game:
-    win.blit(BG,(0,0))
+    win.blit(BG, (0, 0))
     pygame.time.delay(100)
+
+    win.blit(BG, (0, 0))
+    SEVEN_MOUSE_POS = pygame.mouse.get_pos()
+
+    SEVEN_BACK = Button(image=None, pos=(1100, 650),
+                        text_input="BACK", font=get_font(75), base_color="Red", hovering_color="White")
+
+    SEVEN_BACK.changeColor(SEVEN_MOUSE_POS)
+    SEVEN_BACK.update(win)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            # окно будет оставаться открытым пока не нажмется крестик или интерфейс не будет закрыт
             run_game = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
+                import main
 
-#фон
     draw_texts()
+
+    pygame.display.update()
 
     # анти спам кнопок
     if main_loop > 0:
@@ -291,10 +306,6 @@ while run_game:
     # получение нажатых клавиш
     keys = pygame.key.get_pressed()
 
-    from main import *
-
-    if keys[pygame.K_ESCAPE]:
-        main_menu()
 
     #рестарт
     if keys[pygame.K_r]:
@@ -421,6 +432,7 @@ while run_game:
             spectate = False
 
         main_loop = 1
+
 
     display_card()
 
