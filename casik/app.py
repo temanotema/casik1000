@@ -1,3 +1,3 @@
-from casik import pygame_base, main, blackjack, luckyseven
+from casik.screen import start_screen
+start_screen()
 
-pygame_base.run[pygame_base.MENU_MAIN]()
