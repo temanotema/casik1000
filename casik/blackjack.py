@@ -5,12 +5,11 @@ from pics import *
 from button import Button
 
 
-
 def get_font(size):
     return pygame.font.Font("pics/font.ttf", size)
 
-# Создание карт
 
+# Создание карт
 class Card():
     def __init__(self,V,N,S,P):
         self.value = V      # Очко карты
@@ -196,9 +195,6 @@ WIN_HEIGHT = 720
 win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 pygame.display.set_caption("BlackJack")
 
-
-
-
 # данные карт
 CARD_VALUES = [11,2,3,4,5,6,7,8,9,10,10,10,10]
 CARD_NAMES = list(range(1,14))
@@ -226,20 +222,6 @@ for i in card_img_dir:
 
 bg_card = Card(0,0,0,pygame.transform.scale(pygame.image.load("images/blue_back.png"), (CARD_WIDTH, CARD_HEIGHT)))
 
-
-# иниц колод
-player_hand = []
-card_x_pos = []
-card_y_pos = []
-
-AI_hand = []
-AI_card_x_pos = []
-AI_card_y_pos = []
-
-hidden_hand = []
-hidden_card_x_pos = []
-hidden_card_y_pos = []
-
 DEFAULT_X = 30
 DEFAULT_Y = WIN_HEIGHT-CARD_HEIGHT-30
 AI_DEFAULT_Y = 45
@@ -257,6 +239,18 @@ win_str = ['', 'ВЫ ВЫИГРАЛИ', 'ОППОНЕНТ ВЫИГРАЛ', 'ПЕ
 win_x = [0, 100, 65, 180, 180, 40, 100]
 win_y = [0, 30, 30, 30, 30, 30, 30]
 
+# иниц колод
+player_hand = []
+card_x_pos = []
+card_y_pos = []
+
+AI_hand = []
+AI_card_x_pos = []
+AI_card_y_pos = []
+
+hidden_hand = []
+hidden_card_x_pos = []
+hidden_card_y_pos = []
 
 # булевые значекния для гуи
 main_loop = 0
@@ -264,7 +258,6 @@ run_game = True
 reveal = False
 session = True
 spectate = False
-
 
 # создание колоды что сохранить исходную копию
 original_deck = initializeDeck()

@@ -44,6 +44,7 @@ while run_game:
     pygame.time.delay(100)
 
     win.blit(BG, (0, 0))
+
     SEVEN_MOUSE_POS = pygame.mouse.get_pos()
 
     SEVEN_BACK = Button(image=None, pos=(1100, 650),
@@ -57,7 +58,7 @@ while run_game:
             run_game = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
-                import main
+                run_game = False
 
     draw_texts()
 
