@@ -239,6 +239,9 @@ win_str = ['', 'ВЫ ВЫИГРАЛИ', 'ОППОНЕНТ ВЫИГРАЛ', 'ПЕ
 win_x = [0, 100, 65, 180, 180, 40, 100]
 win_y = [0, 30, 30, 30, 30, 30, 30]
 
+original_deck = initializeDeck()
+BG = pygame.image.load("pics/Background.png")
+
 # иниц колод
 player_hand = []
 card_x_pos = []
@@ -258,139 +261,88 @@ run_game = True
 reveal = False
 session = True
 spectate = False
-
-# создание колоды что сохранить исходную копию
-original_deck = initializeDeck()
-full_deck = list(original_deck)
-BG = pygame.image.load("pics/Background.png")
-
-# игровой цикл
-while run_game:
-    win.blit(BG, (0, 0))
-    pygame.time.delay(100)
-
-    win.blit(BG, (0, 0))
-    SEVEN_MOUSE_POS = pygame.mouse.get_pos()
-
-    SEVEN_BACK = Button(image=None, pos=(1100, 650),
-                        text_input="BACK", font=get_font(75), base_color="Red", hovering_color="White")
-
-    SEVEN_BACK.changeColor(SEVEN_MOUSE_POS)
-    SEVEN_BACK.update(win)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run_game = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
-                import main
-
-    draw_texts()
-
-    pygame.display.update()
-
-    # анти спам кнопок
-    if main_loop > 0:
-        main_loop += 1
-    if main_loop > 5:
-        main_loop = 0
+full_deck = []
 
 
-    # получение нажатых клавиш
-    keys = pygame.key.get_pressed()
+def reset_game():
+    # иниц колод
+    player_hand.clear()
+    card_x_pos.clear()
+    card_y_pos.clear()
+
+    AI_hand.clear()
+    AI_card_x_pos.clear()
+    AI_card_y_pos.clear()
+
+    hidden_hand.clear()
+    hidden_card_x_pos.clear()
+    hidden_card_y_pos.clear()
+
+    # булевые значекния для гуи
+    global main_loop, run_game, reveal, session, spectate, orignal_deck, full_deck, win_int
+    main_loop = 0
+    run_game = True
+    reveal = False
+    session = True
+    spectate = False
+    win_int = 0
+
+    # создание колоды что сохранить исходную копию
+    full_deck = list(original_deck)
 
 
-    #рестарт
-    if keys[pygame.K_r]:
-        # иницилизация заново
-        full_deck = list(original_deck)
-        run_game = True
-        session = True
-        main_loop = 0
-        win_int = 0
-        reveal = False
-        session = True
-        player_hand = []
-        card_x_pos = []
-        card_y_pos = []
-        AI_hand = []
-        AI_card_x_pos = []
-        AI_card_y_pos = []
-        hidden_hand = []
-        hidden_card_x_pos = []
-        hidden_card_y_pos = []
+def main():
+    global run_game, main_loop, session, spectate, win_int, reveal
+    reset_game()
 
+    # игровой цикл
+    while run_game:
+        win.blit(BG, (0, 0))
+        pygame.time.delay(100)
 
-    # игрок взял или получил другую карту
-    if keys[pygame.K_SPACE] and main_loop == 0 and session:
-        player_draw_cards()
-        main_loop = 1
+        win.blit(BG, (0, 0))
+        SEVEN_MOUSE_POS = pygame.mouse.get_pos()
 
-        AI_hit = AI_draw_card()
+        SEVEN_BACK = Button(image=None, pos=(1100, 650),
+                            text_input="BACK", font=get_font(75), base_color="Red", hovering_color="White")
 
-        print("ОППОНЕНТ: ", end='')
-        print(get_card_value(AI_hand))
+        SEVEN_BACK.changeColor(SEVEN_MOUSE_POS)
+        SEVEN_BACK.update(win)
 
-        # все возможные рез-ты
-        if get_card_value(AI_hand) > 21 and get_card_value(player_hand) > 21:
-            session = False
-            print("НЕТ ПОБЕДИТЕЛЯ")
-            win_int = 6
-            reveal = True
-        elif get_card_value(AI_hand) > 21:
-            session = False
-            print("ПЕРЕБОР, ВЫ ВЫИГРАЛИ!")
-            win_int = 4
-            reveal = True
-        elif get_card_value(player_hand) > 21:
-            print('ПЕРЕБОР, ОППОНЕНТ ВЫИГРАЛ!')
-            win_int = 3
-            session = False
-            reveal = True
-        elif get_card_value(AI_hand) == 21 and get_card_value(player_hand) == 21:
-            print('НИЧЬЯ')
-            win_int = 5
-            session = False
-            reveal = True
-        elif get_card_value(AI_hand) == 21 and get_card_value(player_hand) != 21:
-            print('ОППОНЕНТ ВЫИГРАЛ!')
-            win_int = 2
-            session = False
-            reveal = True
-        elif get_card_value(AI_hand) != 21 and get_card_value(player_hand) == 21:
-            print('ВЫ ВЫИГРАЛИ!')
-            win_int = 1
-            session = False
-            reveal = True
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run_game = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
+                    import main
 
+        draw_texts()
 
-    # игрок пасует
-    if (keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]) and main_loop == 0 and session:
-        main_loop = 1
+        pygame.display.update()
 
-        AI_hit = AI_draw_card()
+        # анти спам кнопок
+        if main_loop > 0:
+            main_loop += 1
+        if main_loop > 5:
+            main_loop = 0
 
-        print("ОППОНЕНТ: ", end='')
-        print(get_card_value(AI_hand))
+        # получение нажатых клавиш
+        keys = pygame.key.get_pressed()
 
-        # возмодные рез-ты
-        if (AI_hit == False):
-            if get_card_value(AI_hand) > get_card_value(player_hand):
-                session = False
-                print("ОППОНЕНТ ВЫИГРАЛ")
-                win_int = 2
-                reveal = True
-            elif get_card_value(AI_hand) < get_card_value(player_hand):
-                session = False
-                print("ВЫ ВЫИГРАЛИ")
-                win_int = 1
-                reveal = True
-            else:
-                session = False
-                print("TIED")
-                win_int = 5
-                reveal = True
-        else:
+        if keys[pygame.K_r]:
+            reset_game()
+
+        # игрок взял или получил другую карту
+        if keys[pygame.K_SPACE] and main_loop == 0 and session:
+            player_draw_cards()
+            main_loop = 1
+
+            AI_draw_card()
+
+            print("ОППОНЕНТ: ", end='')
+            print(get_card_value(AI_hand))
+
+            # все возможные рез-ты
             if get_card_value(AI_hand) > 21 and get_card_value(player_hand) > 21:
                 session = False
                 print("НЕТ ПОБЕДИТЕЛЯ")
@@ -398,8 +350,13 @@ while run_game:
                 reveal = True
             elif get_card_value(AI_hand) > 21:
                 session = False
-                print("ПЕРЕБОР, ВЫ ВЫИГРАЛИ")
+                print("ПЕРЕБОР, ВЫ ВЫИГРАЛИ!")
                 win_int = 4
+                reveal = True
+            elif get_card_value(player_hand) > 21:
+                print('ПЕРЕБОР, ОППОНЕНТ ВЫИГРАЛ!')
+                win_int = 3
+                session = False
                 reveal = True
             elif get_card_value(AI_hand) == 21 and get_card_value(player_hand) == 21:
                 print('НИЧЬЯ')
@@ -417,16 +374,70 @@ while run_game:
                 session = False
                 reveal = True
 
-    # если режим наблюдателя
-    if keys[pygame.K_TAB] and main_loop == 0:
-        if spectate == False:
-            spectate = True
-        else:
-            spectate = False
+        # игрок пасует
+        if (keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]) and main_loop == 0 and session:
+            main_loop = 1
 
-        main_loop = 1
+            AI_hit = AI_draw_card()
+
+            print("ОППОНЕНТ: ", end='')
+            print(get_card_value(AI_hand))
+
+            # возмодные рез-ты
+            if (AI_hit == False):
+                if get_card_value(AI_hand) > get_card_value(player_hand):
+                    session = False
+                    print("ОППОНЕНТ ВЫИГРАЛ")
+                    win_int = 2
+                    reveal = True
+                elif get_card_value(AI_hand) < get_card_value(player_hand):
+                    session = False
+                    print("ВЫ ВЫИГРАЛИ")
+                    win_int = 1
+                    reveal = True
+                else:
+                    session = False
+                    print("TIED")
+                    win_int = 5
+                    reveal = True
+            else:
+                if get_card_value(AI_hand) > 21 and get_card_value(player_hand) > 21:
+                    session = False
+                    print("НЕТ ПОБЕДИТЕЛЯ")
+                    win_int = 6
+                    reveal = True
+                elif get_card_value(AI_hand) > 21:
+                    session = False
+                    print("ПЕРЕБОР, ВЫ ВЫИГРАЛИ")
+                    win_int = 4
+                    reveal = True
+                elif get_card_value(AI_hand) == 21 and get_card_value(player_hand) == 21:
+                    print('НИЧЬЯ')
+                    win_int = 5
+                    session = False
+                    reveal = True
+                elif get_card_value(AI_hand) == 21 and get_card_value(player_hand) != 21:
+                    print('ОППОНЕНТ ВЫИГРАЛ!')
+                    win_int = 2
+                    session = False
+                    reveal = True
+                elif get_card_value(AI_hand) != 21 and get_card_value(player_hand) == 21:
+                    print('ВЫ ВЫИГРАЛИ!')
+                    win_int = 1
+                    session = False
+                    reveal = True
+
+        # если режим наблюдателя
+        if keys[pygame.K_TAB] and main_loop == 0:
+            if spectate == False:
+                spectate = True
+            else:
+                spectate = False
+
+            main_loop = 1
+
+        display_card()
 
 
-    display_card()
-
-
+if __name__ == "__main__":
+    main()
