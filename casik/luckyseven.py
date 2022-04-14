@@ -1,29 +1,9 @@
-import pygame, sys
-from button import Button
-from enum import Enum, IntEnum
-import random
-from pics import *
-
-pygame.init()
-
-WIN_WIDTH = 1280
-WIN_HEIGHT = 720
-win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-pygame.display.set_caption("LuckySeven")
-
-main_loop = 0
-run_game = True
-
-BG = pygame.image.load("pics/Background.png")
-black = (0, 0, 0)
-white = (255, 255, 255)
-INST_font = pygame.font.SysFont(None, 30)
+from casik.button import Button
+from casik.pygame_base import *
 
 
-def get_font(size):
-    return pygame.font.Font("pics/font.ttf", size)
-
-
+SEVEN_BACK = Button(image=None, pos=(1100, 650),
+                    text_input="BACK", font=get_font(75), base_color="Red", hovering_color="White")
 def draw_texts():
     space_text = INST_font.render('Нажмите [SPACE] чтобы прокрутить слот', True, white)
     combo1_text = INST_font.render('Комбинация 1: 7 | 7 | 7 ', True, white)
@@ -38,30 +18,29 @@ def draw_texts():
     win.blit(space_text, (WIN_WIDTH // 2 + 211, WIN_HEIGHT // 2 - 210))
 
 
+def main():
+    pygame.display.set_caption("LuckySeven")
+    next_function = None
 
-while run_game:
-    win.blit(BG, (0, 0))
-    pygame.time.delay(100)
+    while not next_function:
+        win.blit(IMAGE_BG, (0, 0))
+        SEVEN_MOUSE_POS = pygame.mouse.get_pos()
+        SEVEN_BACK.changeColor(SEVEN_MOUSE_POS)
+        SEVEN_BACK.update(win)
 
-    win.blit(BG, (0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                next_function = quit
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
+                    next_function = run[MENU_MAIN]
+        draw_texts()
+        pygame.display.update()
+    if next_function:
+        next_function()
 
-    SEVEN_MOUSE_POS = pygame.mouse.get_pos()
 
-    SEVEN_BACK = Button(image=None, pos=(1100, 650),
-                        text_input="BACK", font=get_font(75), base_color="Red", hovering_color="White")
+run[GAME_LUCKYSEVEN] = main
 
-    SEVEN_BACK.changeColor(SEVEN_MOUSE_POS)
-    SEVEN_BACK.update(win)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run_game = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
-                run_game = False
-
-    draw_texts()
-
-    pygame.display.update()
-
-pygame.quit()
+if __name__ == "__main__":
+    main()

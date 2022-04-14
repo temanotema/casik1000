@@ -1,12 +1,23 @@
-import pygame
-from enum import Enum, IntEnum
+from casik.pygame_base import *
 import random
-from pics import *
-from button import Button
+from casik.button import Button
 
 
-def get_font(size):
-    return pygame.font.Font("pics/font.ttf", size)
+# данные карт
+CARD_VALUES = [11,2,3,4,5,6,7,8,9,10,10,10,10]
+CARD_NAMES = list(range(1,14))
+CARD_SUITS = list(range(1,5))
+
+# размер карт
+CARD_WIDTH = 150
+CARD_HEIGHT = 250
+
+card_img_dir = []
+card_img = []
+
+# цвета
+black = (0,0,0)
+white = (255,255,255)
 
 
 # Создание карт
@@ -50,7 +61,6 @@ def card_index(V,S):
 
 # Отображение карт на экране
 def display_card():
-
     # Показать каждую карту
     if (len( player_hand) != 0):
         for i in range(len( player_hand)):
@@ -75,8 +85,7 @@ def get_random_card():
     global full_deck
     r = random.randint(0,len(full_deck)-1)
 
-
-# Убрать и вернуть карту из колоды
+    # Убрать и вернуть карту из колоды
     return full_deck.pop(r)
 
 
@@ -177,39 +186,10 @@ def draw_texts():
     win.blit(enter_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2 - 270))
     win.blit(spec_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2 - 240))
 
-
-
-
     # отображение счета оппа если спек мод
     if spectate:
         AI_value_text = GUI_font.render('СУММА: '+ str(get_card_value(AI_hand)),True,white)
         win.blit(AI_value_text, (175,15))
-
-
-
-# создание меню
-pygame.init()
-# иниц окна
-WIN_WIDTH = 1280
-WIN_HEIGHT = 720
-win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-pygame.display.set_caption("BlackJack")
-
-# данные карт
-CARD_VALUES = [11,2,3,4,5,6,7,8,9,10,10,10,10]
-CARD_NAMES = list(range(1,14))
-CARD_SUITS = list(range(1,5))
-
-# размер карт
-CARD_WIDTH = 150
-CARD_HEIGHT = 250
-
-card_img_dir = []
-card_img = []
-
-# цвета
-black = (0,0,0)
-white = (255,255,255)
 
 
 # загрузка фотографий карт
@@ -226,13 +206,6 @@ DEFAULT_X = 30
 DEFAULT_Y = WIN_HEIGHT-CARD_HEIGHT-30
 AI_DEFAULT_Y = 45
 DEFAULT_OFFSET = 30
-
-
-# иниц тексты и счетов
-GUI_font = pygame.font.SysFont(None, 32)
-WIN_font = pygame.font.SysFont(None, 42)
-INST_font = pygame.font.SysFont(None, 30)
-TITLE_font = pygame.font.SysFont(None, 24)
 
 win_int = 0
 win_str = ['', 'ВЫ ВЫИГРАЛИ', 'ОППОНЕНТ ВЫИГРАЛ', 'ПЕРЕБОР — ОППОНЕНТ ВЫИГРАЛ', 'ВЫ ВЫИГРАЛИ — ПЕРЕБОР', 'НИЧЬЯ', 'НЕТ ПОБЕДИТЕЛЯ']
@@ -257,7 +230,6 @@ hidden_card_y_pos = []
 
 # булевые значекния для гуи
 main_loop = 0
-run_game = True
 reveal = False
 session = True
 spectate = False
@@ -279,9 +251,8 @@ def reset_game():
     hidden_card_y_pos.clear()
 
     # булевые значекния для гуи
-    global main_loop, run_game, reveal, session, spectate, orignal_deck, full_deck, win_int
+    global main_loop, reveal, session, spectate, orignal_deck, full_deck, win_int
     main_loop = 0
-    run_game = True
     reveal = False
     session = True
     spectate = False
@@ -292,15 +263,17 @@ def reset_game():
 
 
 def main():
-    global run_game, main_loop, session, spectate, win_int, reveal
-    reset_game()
+    pygame.display.set_caption("BlackJack")
 
+    global main_loop, session, spectate, win_int, reveal
+    reset_game()
+    next_function = None
     # игровой цикл
-    while run_game:
-        win.blit(BG, (0, 0))
+    while not next_function:
+        win.blit(IMAGE_BG, (0, 0))
         pygame.time.delay(100)
 
-        win.blit(BG, (0, 0))
+        win.blit(IMAGE_BG, (0, 0))
         SEVEN_MOUSE_POS = pygame.mouse.get_pos()
 
         SEVEN_BACK = Button(image=None, pos=(1100, 650),
@@ -311,10 +284,10 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run_game = False
+                next_function = quit
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
-                    import main
+                    next_function = run[MENU_MAIN]
 
         draw_texts()
 
@@ -437,7 +410,10 @@ def main():
             main_loop = 1
 
         display_card()
+    if next_function:
+        next_function()
 
+run[GAME_BLACKJACK] = main
 
 if __name__ == "__main__":
-    main()
+    run[GAME_BLACKJACK]()
