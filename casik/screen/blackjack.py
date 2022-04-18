@@ -1,7 +1,6 @@
 from casik.pygame_base import *
 import random
 from casik.button import Button
-print('bj')
 
 # данные карт
 CARD_VALUES = [11,2,3,4,5,6,7,8,9,10,10,10,10]
