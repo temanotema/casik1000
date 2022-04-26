@@ -276,7 +276,7 @@ def main():
         SEVEN_MOUSE_POS = pygame.mouse.get_pos()
 
         SEVEN_BACK = Button(image=None, pos=(1100, 650),
-                            text_input="BACK", font=get_font(75), base_color="Red", hovering_color="White")
+                            text_input="BACK", font=get_font(75), base_color="White", hovering_color="Red")
 
         SEVEN_BACK.changeColor(SEVEN_MOUSE_POS)
         SEVEN_BACK.update(win)
@@ -287,9 +287,7 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
                     next_function = run[MENU_MAIN]
-
         draw_texts()
-
         pygame.display.update()
 
         # анти спам кнопок

@@ -56,7 +56,7 @@ def options():
         win.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
         OPTIONS_BACK = Button(image=None, pos=(640, 400),
-                            text_input="Back", font=get_font(75), base_color="Black", hovering_color="Green")
+                            text_input="Back", font=get_font(75), base_color="Black", hovering_color="Red")
 
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(win)

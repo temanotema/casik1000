@@ -1,5 +1,4 @@
 import sys
-
 import pygame
 
 # создание меню
@@ -20,6 +19,12 @@ TITLE_font = pygame.font.SysFont(None, 24)
 
 def load_image(path, size):
     return pygame.transform.scale(pygame.image.load(path), size)
+
+
+lemon = load_image('images/lemon.jpg', (200, 200))
+apple = load_image('images/apple.jpg', (200, 200))
+plum = load_image('images/plum.jpg', (200, 200))
+cherry = load_image('images/cherry.jpg', (200, 200))
 
 
 def get_font(size):
