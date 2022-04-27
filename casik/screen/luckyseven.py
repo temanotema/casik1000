@@ -1,13 +1,11 @@
+import pygame.display
+
 from casik.button import Button
 from casik.pygame_base import *
-
+import random
 
 SEVEN_BACK = Button(image=None, pos=(1100, 650),
                     text_input="BACK", font=get_font(75), base_color="White", hovering_color="Red")
-
-
-main_loop = 0
-session = True
 
 
 def draw_texts():
@@ -26,6 +24,7 @@ def draw_texts():
     win.blit(lemon, (550, 270))
     win.blit(lemon, (765, 270))
 
+
 def new_load():
     win.blit(cherry, (335, 270))
     win.blit(apple, (550, 270))
@@ -42,6 +41,10 @@ def main():
         SEVEN_MOUSE_POS = pygame.mouse.get_pos()
         SEVEN_BACK.changeColor(SEVEN_MOUSE_POS)
         SEVEN_BACK.update(win)
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_SPACE]:
+            next_function = new_load
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -53,18 +56,11 @@ def main():
         draw_texts()
         pygame.display.update()
 
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_SPACE]:
-            new_load()
-            pygame.display.update()
-
     if next_function:
         next_function()
-    pygame.display.update()
 
 
 run[GAME_LUCKYSEVEN] = main
 
 if __name__ == "__main__":
-    main()
+    run[GAME_LUCKYSEVEN]()

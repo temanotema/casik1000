@@ -271,8 +271,6 @@ def main():
     while not next_function:
         win.blit(IMAGE_BG, (0, 0))
         pygame.time.delay(100)
-
-        win.blit(IMAGE_BG, (0, 0))
         SEVEN_MOUSE_POS = pygame.mouse.get_pos()
 
         SEVEN_BACK = Button(image=None, pos=(1100, 650),
@@ -409,6 +407,7 @@ def main():
         display_card()
     if next_function:
         next_function()
+
 
 run[GAME_BLACKJACK] = main
 
