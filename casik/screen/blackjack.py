@@ -1,20 +1,20 @@
 from casik.pygame_base import *
-import random
 from casik.button import Button
+import random
 
-# данные карт
+# Данные карт
 CARD_VALUES = [11,2,3,4,5,6,7,8,9,10,10,10,10]
 CARD_NAMES = list(range(1,14))
 CARD_SUITS = list(range(1,5))
 
-# размер карт
+# Размер карт
 CARD_WIDTH = 150
 CARD_HEIGHT = 250
 
 card_img_dir = []
 card_img = []
 
-# цвета
+# Цвета
 black = (0,0,0)
 white = (255,255,255)
 
@@ -30,12 +30,10 @@ class Card():
 
 # Создание колоды
 def initializeDeck():
-    # Пустая колода
     deck = []
     i = 0
     for j in range(len(CARD_VALUES)):
         for k in CARD_SUITS:
-            # создание обьекта и добавление в колоду
             deck.append(Card(CARD_VALUES[j], CARD_NAMES[j], k, card_img[i]))
             i += 1
 
@@ -84,7 +82,6 @@ def get_random_card():
     global full_deck
     r = random.randint(0,len(full_deck)-1)
 
-    # Убрать и вернуть карту из колоды
     return full_deck.pop(r)
 
 
@@ -112,7 +109,7 @@ def AI_draw_card():
     global hidden_card_x_pos
     global hidden_card_y_pos
 
-    # если значениу у оппа меньше 18 берет карту
+    # Если значениу у оппа меньше 18 берет карту
     if get_card_value(AI_hand) < 18:
         AI_hand.append(get_random_card())
         hidden_hand.append(bg_card)
@@ -130,40 +127,39 @@ def AI_draw_card():
         AI_card_y_pos.append(AI_DEFAULT_Y)
         hidden_card_y_pos.append(AI_DEFAULT_Y)
 
-        # оппонент взял карту?
+        # Оппонент взял карту?
         return True
     else:
         return False
 
 
-# текущий счет игроков
+# Текущий счет игроков
 def get_card_value(hand):
-    # если рука пустая вернуть ноль
+    # Если рука пустая вернуть ноль
     if len(hand) == 0:
         return 0
     else:
-        # переменные
         Aces = []
         sum = 0
 
-        # пройти всю руку
+        # Пройти всю руку
         for i in hand:
-            # сколько тузов в руке
+            # Сколько тузов в руке
             if i.name == 1:
                 Aces.append(i)
 
-            # суммирование очков
+            # Суммирование очков
             sum += i.value
 
-        # уменьшение очков за туз
+        # Уменьшение очков за туз
         if sum > 21 and (len(Aces) != 0):
             sum -= 10
         return sum
 
 
-# отображение текстов
+# Отображение текстов
 def draw_texts():
-    # отображение меню текста
+    # Отображение меню текста
     ai_hand_text = GUI_font.render("ОППОНЕНТ:",True,white)
     player_hand_text = GUI_font.render("ВЫ:",True,white)
     hand_value_text = GUI_font.render('СУММА: '+ str(get_card_value(player_hand)),True,white)
@@ -174,7 +170,7 @@ def draw_texts():
     win.blit(ai_hand_text, (15,15))
     win.blit(player_hand_text, (15,WIN_HEIGHT-CARD_HEIGHT-60))
 
-    # отображение инструкции
+    # Отображение инструкции
     r_text = INST_font.render('Нажмите [R] чтобы перезагрузить', True, white)
     space_text = INST_font.render('Нажмите [SPACE] чтобы взять', True, white)
     enter_text = INST_font.render('Нажмите [ENTER] чтобы пасануть', True, white)
@@ -185,13 +181,13 @@ def draw_texts():
     win.blit(enter_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2 - 270))
     win.blit(spec_text, (WIN_WIDTH//2+211,WIN_HEIGHT//2 - 240))
 
-    # отображение счета оппа если спек мод
+    # Отображение счета оппанента если читы
     if spectate:
         AI_value_text = GUI_font.render('СУММА: '+ str(get_card_value(AI_hand)),True,white)
         win.blit(AI_value_text, (175,15))
 
 
-# загрузка фотографий карт
+# Загрузка фотографий карт
 for i in CARD_NAMES:
     for j in CARD_SUITS:
         card_img_dir.append("images/" + str(i) + "-" + str(j) + ".png")
@@ -214,7 +210,7 @@ win_y = [0, 30, 30, 30, 30, 30, 30]
 original_deck = initializeDeck()
 BG = pygame.image.load("pics/Background.png")
 
-# иниц колод
+# Инициализация колод
 player_hand = []
 card_x_pos = []
 card_y_pos = []
@@ -227,7 +223,7 @@ hidden_hand = []
 hidden_card_x_pos = []
 hidden_card_y_pos = []
 
-# булевые значекния для гуи
+# Булевые значекния для гуи
 main_loop = 0
 reveal = False
 session = True
@@ -235,8 +231,8 @@ spectate = False
 full_deck = []
 
 
+# Рестарт окна
 def reset_game():
-    # иниц колод
     player_hand.clear()
     card_x_pos.clear()
     card_y_pos.clear()
@@ -249,7 +245,6 @@ def reset_game():
     hidden_card_x_pos.clear()
     hidden_card_y_pos.clear()
 
-    # булевые значекния для гуи
     global main_loop, reveal, session, spectate, orignal_deck, full_deck, win_int
     main_loop = 0
     reveal = False
@@ -257,17 +252,17 @@ def reset_game():
     spectate = False
     win_int = 0
 
-    # создание колоды что сохранить исходную копию
+    # Создание колоды, чтобы сохранить исходную копию
     full_deck = list(original_deck)
 
 
+#Игра
 def main():
     pygame.display.set_caption("BlackJack")
 
     global main_loop, session, spectate, win_int, reveal
     reset_game()
     next_function = None
-    # игровой цикл
     while not next_function:
         win.blit(IMAGE_BG, (0, 0))
         pygame.time.delay(100)
@@ -284,23 +279,23 @@ def main():
                 next_function = quit
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
-                    next_function = run[MENU_MAIN]
+                    next_function = run[MENU_TWO]
         draw_texts()
         pygame.display.update()
 
-        # анти спам кнопок
+        # Антиспам кнопок
         if main_loop > 0:
             main_loop += 1
         if main_loop > 5:
             main_loop = 0
 
-        # получение нажатых клавиш
+        # Получение нажатых клавиш
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_r]:
             reset_game()
 
-        # игрок взял или получил другую карту
+        # Игрок взял или получил другую карту
         if keys[pygame.K_SPACE] and main_loop == 0 and session:
             player_draw_cards()
             main_loop = 1
@@ -310,7 +305,7 @@ def main():
             print("ОППОНЕНТ: ", end='')
             print(get_card_value(AI_hand))
 
-            # все возможные рез-ты
+            # Все возможные результаты
             if get_card_value(AI_hand) > 21 and get_card_value(player_hand) > 21:
                 session = False
                 print("НЕТ ПОБЕДИТЕЛЯ")
@@ -342,7 +337,7 @@ def main():
                 session = False
                 reveal = True
 
-        # игрок пасует
+        # Игрок пасует
         if (keys[pygame.K_KP_ENTER] or keys[pygame.K_RETURN]) and main_loop == 0 and session:
             main_loop = 1
 
@@ -351,7 +346,7 @@ def main():
             print("ОППОНЕНТ: ", end='')
             print(get_card_value(AI_hand))
 
-            # возмодные рез-ты
+            # Все возможные результаты
             if (AI_hit == False):
                 if get_card_value(AI_hand) > get_card_value(player_hand):
                     session = False
@@ -395,7 +390,7 @@ def main():
                     session = False
                     reveal = True
 
-        # если режим наблюдателя
+        # Режим наблюдателя
         if keys[pygame.K_TAB] and main_loop == 0:
             if spectate == False:
                 spectate = True
@@ -411,5 +406,3 @@ def main():
 
 run[GAME_BLACKJACK] = main
 
-if __name__ == "__main__":
-    run[GAME_BLACKJACK]()

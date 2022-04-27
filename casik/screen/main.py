@@ -2,7 +2,7 @@ import sys
 from casik.button import Button
 from casik.pygame_base import *
 
-# run
+
 PLAY_TEXT = get_font(100).render("Choose your game:", True, "#b68f40")
 PLAY_RECT = PLAY_TEXT.get_rect(center=(640, 100))
 PLAY_BACK = Button(image=None, pos=(640, 650),
@@ -13,6 +13,7 @@ LUCKYSEVEN_BUTTON = Button(image=pygame.image.load("pics/slot.png"), pos=(960, 3
                            text_input="Lucky Seven", font=get_font(55), base_color="Black", hovering_color="Green")
 
 
+# Второе окно
 def game_select():
     next_function = None
     while not next_function:
@@ -43,7 +44,7 @@ def game_select():
         next_function()
 
 
-# options
+# Настройки
 def options():
     next_function = None
     while not next_function:
@@ -70,11 +71,9 @@ def options():
         pygame.display.update()
 
     if next_function:
-        print(win)
         next_function()
 
 
-# main_menu
 MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
 MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
 PLAY_BUTTON = Button(image=pygame.image.load("pics/play.png"), pos=(640, 250),
@@ -85,6 +84,7 @@ QUIT_BUTTON = Button(image=pygame.image.load("pics/quit.png"), pos=(640, 550),
                      text_input="QUIT", font=get_font(75), base_color="#d4ebfc", hovering_color="Red")
 
 
+# Первое окно
 def main():
     pygame.display.set_caption("CASINO")
     next_function = None
@@ -115,6 +115,5 @@ def main():
 
 
 run[MENU_MAIN] = main
+run[MENU_TWO] = game_select
 
-if __name__ == '__main__':
-    run[MENU_MAIN]()

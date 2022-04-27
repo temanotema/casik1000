@@ -1,5 +1,4 @@
 import pygame.display
-
 from casik.button import Button
 from casik.pygame_base import *
 import random
@@ -8,6 +7,7 @@ SEVEN_BACK = Button(image=None, pos=(1100, 650),
                     text_input="BACK", font=get_font(75), base_color="White", hovering_color="Red")
 
 
+# Отрисовка картинок и текстов
 def draw_texts():
     space_text = INST_font.render('Нажмите [SPACE] чтобы прокрутить слот', True, white)
     combo1_text = INST_font.render('Комбинация 1: lemon | lemon | lemon ', True, white)
@@ -25,6 +25,7 @@ def draw_texts():
     win.blit(lemon, (765, 270))
 
 
+# Вторая отрисовка
 def new_load():
     win.blit(cherry, (335, 270))
     win.blit(apple, (550, 270))
@@ -32,6 +33,7 @@ def new_load():
     pygame.display.update()
 
 
+# Игра
 def main():
     pygame.display.set_caption("LuckySeven")
     next_function = None
@@ -43,15 +45,14 @@ def main():
         SEVEN_BACK.update(win)
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_SPACE]:
-            next_function = new_load
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 next_function = quit
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if SEVEN_BACK.checkForInput(SEVEN_MOUSE_POS):
-                    next_function = run[MENU_MAIN]
+                    next_function = run[MENU_TWO]
+            if keys[pygame.K_SPACE]:
+                next_function = new_load
 
         draw_texts()
         pygame.display.update()
@@ -62,5 +63,4 @@ def main():
 
 run[GAME_LUCKYSEVEN] = main
 
-if __name__ == "__main__":
-    run[GAME_LUCKYSEVEN]()
+
